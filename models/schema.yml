@@ -1,0 +1,53 @@
+# schema.yml
+
+ version: 2
+
+ sources:
+   - name: raw
+     schema: gz_raw_data
+     database: genuine-octagon-484809-a1
+     loader: bigquery
+     freshness:
+       warn_after: {count: 90, period: day}
+     tables:
+       - name: sales
+         identifier: raw_gz_sales
+         description : sales details for each order
+         tests:
+            - unique:
+                column_name: "(orders_id || '-' || pdt_id)"
+         columns:
+           - name: date_date
+             description: date of sales
+           - name: revenue
+             description: revenue by order
+           - name: quantity
+             description: quantity of products by order
+       - name: product
+         identifier: raw_gz_product
+         description: purchase price details by product
+         columns:
+           - name: products_id
+             description: primary key
+             tests:
+               - unique
+               - not_null
+           - name: purchSE_PRICE
+             description: purchase price by product
+       - name: ship
+         identifier: raw_gz_ship
+         description: all ship costs by order
+         columns:
+           - name: orders_id
+             description: primary key
+             tests:
+               - unique
+               - not_null
+           - name: shipping_fee
+             description: shipping fee by order
+           - name: shipping_fee_1
+             description: shipping fee by order
+           - name: logCost
+             description: log cost by order
+           - name: ship_cost
+             description: ship cost by order
